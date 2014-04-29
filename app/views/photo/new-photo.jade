@@ -1,0 +1,21 @@
+extends ../layout
+
+block css
+  link(rel='stylesheet', href='/css/new-photo.css')
+
+block content
+  form(id='photoForm')
+    input(id='cloud-token', name='token', type='hidden', value= token)
+    input(id='cloud-key', name='key', type='hidden', value= key)
+    input(id='file', class='photoInput', accept='image/*', type='file', name='photoFile')
+    input(id='choose', class='photoInput', type='button' value='Choose')
+    textarea(id='description', class='photoInput', name='description', placeholder='Description')
+    input(class='photoInput', type='submit' name='submit')
+    label(class='label') Preview
+    img(id='preview', class='photo')
+    label(class='label') Result
+    img(id='result', class='photo')
+
+block js
+  script(src='/js/exif.js')
+  script(src='/js/main.js')
