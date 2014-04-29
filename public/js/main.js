@@ -12,9 +12,9 @@
 
   //******************* EXIF helper **********************
   var gpsFormatter = function(exifCoord, hemi) {
-    var degrees = exifCoord.length > 0 ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
-        minutes = exifCoord.length > 1 ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
-        seconds = exifCoord.length > 2 ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
+    var degrees = (exifCoord && exifCoord.length > 0) ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
+        minutes = (exifCoord && exifCoord.length > 1) ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
+        seconds = (exifCoord && exifCoord.length > 2 )? exifCoord[0].numerator/exifCoord[0].denominator : 0,
         flip = (hemi == 'W' || hemi == 'S') ? -1 : 1;
 
     return flip * (degrees + minutes / 60 + seconds / 3600);
@@ -63,34 +63,39 @@
       }
 
       detailData = new FormData();
+
       detailData.append('location', JSON.stringify(location));
       detailData.append('key', $key.val());
       detailData.append('description', $description.val());
 
       fileData = new FormData();
-      fileData.append('photoFile', $file[0].files[0]);
+      
       fileData.append('key', $key.val());
       fileData.append('token', $token.val());
+      fileData.append('file', $file[0].files[0]);
 
       //post to cloud
       $.ajax({
         type: 'POST',
-          url: 'http://up.qiniu.com/',
-          contentType: false,
-          processData: false,
-          data: fileData,
-          success: function(data) {
-            // post to server
-            $.ajax({
-              type: 'POST',
-              url: '/api/photo',
-              data: detailData,
-              success: function(data) {
-                $result.attr('src', data.url);                            
-              }
-            });                            
-          }
+        url: 'http://up.qiniu.com/',
+        contentType: false,
+        processData: false,
+        data: fileData,
+        success: function(data) {
+          // post to server
+          $.ajax({
+            type: 'POST',
+            url: '/api/photo',
+            contentType: false,
+            processData: false,
+            data: detailData,
+            success: function(data) {
+              $result.attr('src', data.url);                            
+            }
+          });   
+        }
       });
+
   };
 
   var openFileUpload = function() {

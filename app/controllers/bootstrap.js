@@ -3,12 +3,10 @@ var cloud = require('../models/cloud'),
 
 module.exports = function(app) {
   return function(req, res) {
-    console.log(cloud.getToken());
-    console.log(cloud.formatKey(utils.generateUUID()));
 
     res.render('photo/new-photo', {
       token: cloud.getToken(),
-      key: cloud.formatKey(utils.generateUUID())
+      key: utils.generateUUID()
     });
 
   };

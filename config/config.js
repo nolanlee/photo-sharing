@@ -26,8 +26,7 @@ var config = {
     },
     port: 3000,
     db: uristring + '-development',
-    dbOptions: mongoOptions,
-    uploadDir: rootPath + "/uploads"
+    dbOptions: mongoOptions
   },
 
   test: {
@@ -37,8 +36,7 @@ var config = {
     },
     port: 3000,
     db: uristring + '-test',
-    dbOptions: mongoOptions,
-    uploadDir: rootPath + "/uploads"
+    dbOptions: mongoOptions
   },
 
   production: {
@@ -48,8 +46,7 @@ var config = {
     },
     port: 3000,
     db: uristring + '-production',
-    dbOptions: mongoOptions,
-    uploadDir: rootPath + "/uploads"
+    dbOptions: mongoOptions
   }
 };
 

@@ -1,6 +1,4 @@
 {
   "directory": "public/components",
-  "json": "bower.json",
-  "proxy": "http://proxy.sha.sap.corp:8080",
-  "https-proxy": "http://proxy.sha.sap.corp:8080"
+  "json": "bower.json"
 }

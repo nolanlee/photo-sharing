@@ -11,10 +11,6 @@ Cloud.getToken = function() {
   return new qiniu.rs.PutPolicy(bucketname).token();
 };
 
-Cloud.formatKey = function(key) {
-  return appName + '/photos/' + key;
-};
-
 Cloud.uploadPhoto = function(file, key, callback) {
   var extra = new qiniu.io.PutExtra(),
     uptoken = new qiniu.rs.PutPolicy(bucketname).token();
@@ -24,11 +20,11 @@ Cloud.uploadPhoto = function(file, key, callback) {
   //extra.crc32 = crc32;
   //extra.checkCrc = checkCrc;
 
-  qiniu.io.putFile(uptoken, this.formatKey(key), file, extra, callback);
+  qiniu.io.putFile(uptoken, key, file, extra, callback);
 };
 
 Cloud.getPhotoURL = function(key) {
-  return 'http://' + bucketname + '.qiniudn.com/' + this.formatKey(key);
+  return 'http://' + bucketname + '.qiniudn.com/' + key;
 };
 
 module.exports = Cloud;
