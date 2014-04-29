@@ -1,0 +1,12 @@
+Environment:
+1. install NodeJS
+	http://nodejs.org/
+	(set npm proxy: npm config set proxy http://proxy.sha.sap.corp:8080)
+2. install Yeoman
+	npm install -g yo
+	(set Bower proxy: add "proxy": "http://proxy.sha.sap.corp:8080", "https-proxy": "http://proxy.sha.sap.corp:8080" in.bowerrc)
+3. install MongoDB
+	https://www.mongodb.org/downloads
+4. install Git
+	http://git-scm.com/
+	(set Git proxy: git config --global http.proxy http://proxy.sha.sap.corp:8080, git config --global https.proxy http://proxy.sha.sap.corp:8080)
