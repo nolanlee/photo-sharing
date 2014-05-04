@@ -15,17 +15,14 @@
       $deleteDialog = $('#deleteDialog');
 
     $deleteBtn.click(function() {
-      var formData = new FormData();
-
-      formData.append('id', photoId);
-      formData.append('passcode', $passcode.val());
-      formData.append('deleted', true);
-
       $.ajax({
         type: 'PUT',
-        data: formData,
-        contentType: false,
-        processData: false,
+        data: JSON.stringify({
+          id: photoId,
+          passcode: $passcode.val(),
+          deleted: true
+        }),
+        contentType: 'application/json',
         url: 'api/photo/' + photoId,
         success: function() {
           alert('delete success');

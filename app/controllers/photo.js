@@ -98,6 +98,8 @@ api.editPhoto = function(req, res) {
   var id = req.body.id,
     passcode = req.body.passcode;
 
+  console.log(req.body);
+
   if(passcode) {
     Photo.findOne({_id: id, passcode: passcode}, function(err, photo) {
       if(err) {
