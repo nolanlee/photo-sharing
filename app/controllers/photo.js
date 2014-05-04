@@ -1,11 +1,12 @@
 var mongoose = require('mongoose'),
   Photo = mongoose.model('Photo'),
   cloud = require('../models/cloud'),
+  utils = require('../utils/utils'),
   api = {};
 
 // ALL
 api.getPhotos = function(req, res) {
-  Photo.find(function(err, photos) {
+  Photo.find({ deleted: false }, '-deleted', function(err, photos) {
     if(err) {
       res.json(500, err);
     } else {
@@ -20,13 +21,13 @@ api.getPhotos = function(req, res) {
 api.getPhoto = function(req, res) {
   var id = req.params.id;
 
-  Photo.findOne({'id': id}, function(err, photo) {
+  Photo.findById(id, function(err, photo) {
     if(err) {
       res.json(404, err);
-    } else if(!photo) {
+    } else if(!photo || photo.deleted) {
       res.json(404, "Photo is null");
     } else {
-      res.json(500, { url: photo.url });
+      res.json(200, photo.toObject());
     }
   });
 };
@@ -35,10 +36,10 @@ api.getPhoto = function(req, res) {
 api.getPhotoDetails = function(req, res) {
    var id = req.params.id;
 
-  Photo.findOne({'id': id}, function(err, photo) {
+  Photo.findById(id, function(err, photo) {
     if(err) {
       res.json(404, err);
-    } else if(!photo) {
+    } else if(!photo || photo.deleted) {
       res.json(404, "Photo is null");
     } else {
       res.json(200, photo.details);
@@ -48,11 +49,16 @@ api.getPhotoDetails = function(req, res) {
 
 // POST
 api.addPhoto = function(req, res) {
-  var photo, photoPath, id = req.body.key, url = cloud.getPhotoURL(id);
+  var photo,
+    photoPath,
+    id = mongoose.Types.ObjectId(),
+    url = cloud.getPhotoURL(req.body.key),
+    passcode = utils.generatePasscode();
 
   photo = new Photo({
-    id: id,
+    _id: id, 
     url: url,
+    passcode: passcode,
     // url: req.files.photoFile.path,
     details: {
       // author: req.body.author,                        // To confirm if necessarey
@@ -64,47 +70,56 @@ api.addPhoto = function(req, res) {
     }
   });
 
+
+
   photo.save(function(err) {
     if(err) {
 
       return res.json(500, err);
 
     } else {
-      console.log('save success!');
-
       return res.json(201, {
-        url: url
+        id: id,
+        url: url,
+        passcode: passcode
       });
 
     }
   });
 };
 
-// PUT
-api.editPhoto = function(req, res) {
-  var id = req.params.id;
-
-  Photo.findById(id, function(err, photo) {
-    // do something
-    res.json(404, {message: 'The api do nothing'});
-  });
-};
-
 // DELETE
 api.deletePhoto = function(req, res) {
-  var id = req.params.id;
+  api.editPhoto(req, res);
+};
 
-  return Photo.findById(id, function(err, photo) {
+// PUT
+api.editPhoto = function(req, res) {
+  var id = req.body.id,
+    passcode = req.body.passcode;
 
-    return photo.remove(function(err) {
+  if(passcode) {
+    Photo.findOne({_id: id, passcode: passcode}, function(err, photo) {
       if(err) {
-        return res.json(500, err);
+        return res.json(500, 'passcode is invalid');
+      } else if(!photo || photo.deleted) {
+        return res.json(500, 'photo is null');
       } else {
-        return res.send(204);
+        Photo.findByIdAndUpdate(id, req.body, function(err, photo) {
+
+          if(err) {
+            return res.json(500, err);
+          } else {
+            return res.send(204);
+          }
+
+        });
       }
     });
+  } else {
+    return res.json(500, 'passcode is null');
+  }
 
-  });
-}
+};
 
 module.exports = api;

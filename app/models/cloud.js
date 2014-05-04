@@ -15,11 +15,6 @@ Cloud.uploadPhoto = function(file, key, callback) {
   var extra = new qiniu.io.PutExtra(),
     uptoken = new qiniu.rs.PutPolicy(bucketname).token();
 
-  //extra.params = params;
-  //extra.mimeType = mimeType;
-  //extra.crc32 = crc32;
-  //extra.checkCrc = checkCrc;
-
   qiniu.io.putFile(uptoken, key, file, extra, callback);
 };
 

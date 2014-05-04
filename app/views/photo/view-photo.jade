@@ -1,10 +1,18 @@
 extends ../layout
 
 block css
-  link(rel='stylesheet', href='/css/viewPhoto.css')
+  link(rel='stylesheet', href='/css/view-photo.css')
 
 block content
-  img(id='photo', src='{url}')
+  div#header
+    a(id='delete', href='javascript:void(0);') Delete
+  div#deleteDialog.popup
+    input(id='passcode')
+    input(id='delete-btn', class='popup-btn', type='button', value='Delete')
+    input(id='cancel-btn', class='popup-btn', type='button', value='Cancel')
+  div#container
+    img#photo
+    div#SOHUCS
 
 block js
-  script(src='/js/main.js')
+  script(src='/js/view-photo.js')

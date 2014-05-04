@@ -1,6 +1,6 @@
 var Utils = {};
 
-Utils.makePasscode = function() {
+Utils.generatePasscode = function() {
   var passcode = '',
     length = 6;
 

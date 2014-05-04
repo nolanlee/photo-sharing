@@ -34,6 +34,25 @@ module.exports = function (grunt) {
         files: ['app/views/**/*.jade'],
         options: { livereload: reloadPort }
       }
+    },
+    bowerInstall: {
+      target: {
+
+        // Point to the files that should be updated when
+        // you run `grunt bower-install`
+        src: [
+          'app/views/**/*.jade'
+        ],
+
+        // Optional:
+        // ---------
+        // cwd: '',
+        dependencies: true,
+        devDependencies: false,
+        exclude: [],
+        fileTypes: {},
+        ignorePath: ''
+      }
     }
   });
 

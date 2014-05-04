@@ -4,7 +4,8 @@ var express = require('express'),
     multiparty = require('connect-multiparty'),
     methodOverride = require('method-override'),
     logger = require('morgan'),
-    bootstrap = require('../app/controllers/bootstrap');
+    cloud = require('../app/models/cloud'),
+    utils = require('../app/utils/utils');
 
 module.exports = function(app, config) {
 
@@ -18,6 +19,16 @@ module.exports = function(app, config) {
     app.use(multiparty());
     app.use(methodOverride());
 
-    app.get('/', bootstrap(app));
+    app.get('/', function(req, res) {
+        //TODO clicet request token and key by AJAX
+        res.render('photo/new-photo', {
+          token: cloud.getToken(),
+          key: utils.generateUUID()
+        });
+    });
+
+    app.get('/photo', function(req, res) {
+        res.render('photo/view-photo');
+    });
 
 };

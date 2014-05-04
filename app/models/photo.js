@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var photoSchema = new Schema({
-  id: String,
   url: String,
   details: {
     // author: String,                                      // To confirm if necessarey

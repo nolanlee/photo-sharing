@@ -8,6 +8,8 @@
       $description = $('#description'),
       $key = $('#cloud-key'),
       $token = $('#cloud-token'),
+      $link = $('#sharing-link'),
+      $passcode = $('#passcode'),
       location;
 
   //******************* EXIF helper **********************
@@ -90,7 +92,9 @@
             processData: false,
             data: detailData,
             success: function(data) {
-              $result.attr('src', data.url);                            
+              $result.attr('src', data.url);
+              $link.html(window.location.origin + '/photo?id=' + data.id);
+              $passcode.html(data.passcode);                         
             }
           });   
         }
