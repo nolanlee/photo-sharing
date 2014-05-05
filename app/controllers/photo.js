@@ -88,39 +88,51 @@ api.addPhoto = function(req, res) {
   });
 };
 
-// DELETE
-api.deletePhoto = function(req, res) {
-  api.editPhoto(req, res);
+// PUT
+api.complainPhoto = function(req, res) {
+  var complain = req.body.complain;
+
+  // TODO complain date count
+  if(typeof complain === 'boolean') {
+    api.editPhoto(req, res, 'complain failed');
+  } else {
+    return res.json(500, 'complain is null');
+  }
 };
 
 // PUT
-api.editPhoto = function(req, res) {
+api.deletePhoto = function(req, res) {
   var id = req.body.id,
     passcode = req.body.passcode;
 
-  console.log(req.body);
-
   if(passcode) {
     Photo.findOne({_id: id, passcode: passcode}, function(err, photo) {
-      if(err) {
-        return res.json(500, 'passcode is invalid');
-      } else if(!photo || photo.deleted) {
+      if(err || !photo) {
+        return res.json(500, err || 'passcode is invalid');
+      } else if( photo.deleted) {
         return res.json(500, 'photo is null');
       } else {
-        Photo.findByIdAndUpdate(id, req.body, function(err, photo) {
-
-          if(err) {
-            return res.json(500, err);
-          } else {
-            return res.send(204);
-          }
-
-        });
+        api.editPhoto(req, res, 'delete failed');
       }
     });
   } else {
     return res.json(500, 'passcode is null');
   }
+};
+
+// PUT
+api.editPhoto = function(req, res, msg) {
+  var id = req.body.id;
+
+  Photo.findByIdAndUpdate(id, req.body, function(err, photo) {
+
+    if(err) {
+      return res.json(500, msg || err);
+    } else {
+      return res.send(204);
+    }
+
+  });
 
 };
 

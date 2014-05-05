@@ -7,7 +7,7 @@ module.exports = function(app){
   app.get('/api/photo/:id', Photo.getPhoto);
   app.get('/api/photoDetails/:id', Photo.getPhotoDetails);
   app.post('/api/photo', Photo.addPhoto);
-  app.put('/api/photo/:id', Photo.editPhoto);
-  app.delete('/api/photo/:id', Photo.deletePhoto);
+  app.put('/api/photo/delete/:id',  Photo.deletePhoto);
+  app.put('/api/photo/complain/:id',  Photo.complainPhoto);
 
 };

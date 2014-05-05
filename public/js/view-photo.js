@@ -1,11 +1,14 @@
 !function($) {
 
   var $photo = $('#photo'),
+    $description = $('#description'),
     parameters = location.search.substr(1),
     photoId = parameters.substring(parameters.indexOf('id=') + 3);
 
   $.get('api/photo/' + photoId, function(data) {
     $photo.attr('src', data.url);
+    $description.html(data.details.description);
+    initMap(data.details.location.latitude, data.details.location.longitude);
   });
 
   var initDeleteDialog = function() {
@@ -23,15 +26,38 @@
           deleted: true
         }),
         contentType: 'application/json',
-        url: 'api/photo/' + photoId,
+        url: 'api/photo/delete/' + photoId,
         success: function() {
           alert('delete success');
+          window.location.href = window.location.origin;
         },
         error: function() {
           alert('delete failed');
         }
       });
     });
+  };
+
+  var initMap = function(latitude, longitude) {
+    if(latitude !== 0 || longitude !== 0) {
+      var $mapCanvas = $('#map-canvas');
+
+      var marker = new google.maps.Marker({
+          position:  new google.maps.LatLng(31.209668, 121.595222)
+      });
+
+      $mapCanvas.height(300);
+
+      var mapOptions = {
+        center: new google.maps.LatLng(latitude, longitude),
+        zoom: 15,
+        draggable: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map($mapCanvas[0], mapOptions);
+
+      marker.setMap(map);
+    }
   };
 
   initDeleteDialog();

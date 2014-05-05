@@ -12,7 +12,11 @@ block content
     input(id='cancel-btn', class='popup-btn', type='button', value='Cancel')
   div#container
     img#photo
+    p#description
+    div#map-canvas
     div#SOHUCS
 
 block js
+  script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyB_UXUmEZTpdrGW3Yk-AAvhLNajCu_d2YA&sensor=true')
   script(src='/js/view-photo.js')
+  

@@ -15,8 +15,8 @@
   //******************* EXIF helper **********************
   var gpsFormatter = function(exifCoord, hemi) {
     var degrees = (exifCoord && exifCoord.length > 0) ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
-        minutes = (exifCoord && exifCoord.length > 1) ? exifCoord[0].numerator/exifCoord[0].denominator : 0,
-        seconds = (exifCoord && exifCoord.length > 2 )? exifCoord[0].numerator/exifCoord[0].denominator : 0,
+        minutes = (exifCoord && exifCoord.length > 1) ? exifCoord[1].numerator/exifCoord[1].denominator : 0,
+        seconds = (exifCoord && exifCoord.length > 2 )? exifCoord[2].numerator/exifCoord[2].denominator : 0,
         flip = (hemi == 'W' || hemi == 'S') ? -1 : 1;
 
     return flip * (degrees + minutes / 60 + seconds / 3600);
