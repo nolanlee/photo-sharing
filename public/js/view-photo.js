@@ -22,8 +22,7 @@
         type: 'PUT',
         data: JSON.stringify({
           id: photoId,
-          passcode: $passcode.val(),
-          deleted: true
+          passcode: $passcode.val()
         }),
         contentType: 'application/json',
         url: 'api/photo/delete/' + photoId,
@@ -37,6 +36,29 @@
       });
     });
   };
+
+  var initComplaint = function() {
+    var $complaint = $('#complaint');
+
+    $complaint.click(function() {
+      $.ajax({
+        type: 'PUT',
+        data: JSON.stringify({
+          id: photoId
+        }),
+        contentType: 'application/json',
+        url: 'api/photo/complain/' + photoId,
+        success: function() {
+          alert('complain success');
+        },
+        error: function() {
+          alert('complain failed');
+        }
+      });
+    });
+  };
+
+  initComplaint();
 
   var initMap = function(latitude, longitude) {
     if(latitude !== 0 || longitude !== 0) {

@@ -4,7 +4,6 @@ var mongoose = require('mongoose'),
 var photoSchema = new Schema({
   url: String,
   details: {
-    // author: String,                                      // To confirm if necessarey
     created_date: { type: Date, default: Date.now },
     description: { type: String },
     location: {
@@ -13,7 +12,7 @@ var photoSchema = new Schema({
     }
   },
   passcode: { type: String },
-  complaint: { type: Number, default: 0 },
+  warningDate: Date,
   deleted: { type: Boolean, default: false }
 });
 

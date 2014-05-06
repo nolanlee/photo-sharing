@@ -4,9 +4,30 @@ var mongoose = require('mongoose'),
   utils = require('../utils/utils'),
   api = {};
 
+var editPhoto = function(id, data, callback) {
+  Photo.findByIdAndUpdate(id, data, callback);
+};
+
+var freezePhoto = function(photo, callback) {
+
+  var isFreezed = false;
+
+  if(!photo.deleted && photo.warningDate && Date.now() - (new Date(photo.warningDate).getTime() > 8640000) ) {
+    editPhoto(photo._id, {
+      deleted: true
+    }, function(err) {
+      isFreezed = !err;
+      callback(isFreezed);
+    });
+  } else {
+    callback(isFreezed);
+  } 
+
+};
+
 // ALL
 api.getPhotos = function(req, res) {
-  Photo.find({ deleted: false }, '-deleted', function(err, photos) {
+  Photo.find(function(err, photos) {
     if(err) {
       res.json(500, err);
     } else {
@@ -22,13 +43,24 @@ api.getPhoto = function(req, res) {
   var id = req.params.id;
 
   Photo.findById(id, function(err, photo) {
+
     if(err) {
       res.json(404, err);
-    } else if(!photo || photo.deleted) {
-      res.json(404, "Photo is null");
     } else {
-      res.json(200, photo.toObject());
+      if(photo && !photo.deleted) {
+        // if someone complain photo and the complain data over one day, system should freeze the photo
+        freezePhoto(photo, function(isFreezed) {
+          if(isFreezed) {
+            res.json(404, "Photo is null");
+          } else {            
+            res.json(200, photo.toObject());
+          }
+        });
+      } else {
+        res.json(404, "Photo is null");
+      }
     }
+
   });
 };
 
@@ -59,9 +91,7 @@ api.addPhoto = function(req, res) {
     _id: id, 
     url: url,
     passcode: passcode,
-    // url: req.files.photoFile.path,
     details: {
-      // author: req.body.author,                        // To confirm if necessarey
       location: {
         latitude: +JSON.parse(req.body.location).latitude,
         longitude: +JSON.parse(req.body.location).longitude
@@ -90,14 +120,24 @@ api.addPhoto = function(req, res) {
 
 // PUT
 api.complainPhoto = function(req, res) {
-  var complain = req.body.complain;
+  var id = req.body.id;
 
-  // TODO complain date count
-  if(typeof complain === 'boolean') {
-    api.editPhoto(req, res, 'complain failed');
-  } else {
-    return res.json(500, 'complain is null');
-  }
+  Photo.findById(id, function(err, photo) {
+    if(photo.warningDate) {
+      return res.send(204);
+    } else {
+      editPhoto(id, {
+        warningDate: new Date()
+      }, function(err) {
+        if(err) {
+          return res.json(500, 'complain failed');
+        } else {
+          return res.send(204);
+        }
+      });
+    }
+  });
+  
 };
 
 // PUT
@@ -112,28 +152,21 @@ api.deletePhoto = function(req, res) {
       } else if( photo.deleted) {
         return res.json(500, 'photo is null');
       } else {
-        api.editPhoto(req, res, 'delete failed');
+        editPhoto(id, {
+          passcode: passcode,
+          deleted: true
+        }, function(err) {
+          if(err) {
+            return res.json(500, 'delete failed');
+          } else {
+            return res.send(204);
+          }
+        });
       }
     });
   } else {
     return res.json(500, 'passcode is null');
   }
-};
-
-// PUT
-api.editPhoto = function(req, res, msg) {
-  var id = req.body.id;
-
-  Photo.findByIdAndUpdate(id, req.body, function(err, photo) {
-
-    if(err) {
-      return res.json(500, msg || err);
-    } else {
-      return res.send(204);
-    }
-
-  });
-
 };
 
 module.exports = api;
