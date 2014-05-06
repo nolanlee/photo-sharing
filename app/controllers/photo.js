@@ -12,7 +12,7 @@ var freezePhoto = function(photo, callback) {
 
   var isFreezed = false;
 
-  if(!photo.deleted && photo.warningDate && Date.now() - (new Date(photo.warningDate).getTime() > 8640000) ) {
+  if(!photo.deleted && photo.warningDate && (Date.now() - new Date(photo.warningDate).getTime() > 8640000) ) {
     editPhoto(photo._id, {
       deleted: true
     }, function(err) {
@@ -27,10 +27,14 @@ var freezePhoto = function(photo, callback) {
 
 // ALL
 api.getPhotos = function(req, res) {
+  console.log(req.cookies);
+  console.log(req.signedCookies);
+  
   Photo.find(function(err, photos) {
     if(err) {
       res.json(500, err);
     } else {
+      res.cookie('admin', 'tobi', { maxAge: 900000, signed: true });
       res.json({
         photos: photos
       });

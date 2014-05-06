@@ -10,4 +10,9 @@ module.exports = function(app){
   app.put('/api/photo/delete/:id',  Photo.deletePhoto);
   app.put('/api/photo/complain/:id',  Photo.complainPhoto);
 
+  //Admin route
+  var Admin = require('../app/controllers/admin');
+
+  app.get('/api/admin/login', Admin.login);
+
 };

@@ -5,6 +5,7 @@ var express = require('express'),
     methodOverride = require('method-override'),
     logger = require('morgan'),
     cloud = require('../app/models/cloud'),
+    cookieParser = require('cookie-parser'),
     utils = require('../app/utils/utils');
 
 module.exports = function(app, config) {
@@ -18,6 +19,7 @@ module.exports = function(app, config) {
     app.use(bodyParser());
     app.use(multiparty());
     app.use(methodOverride());
+    app.use(cookieParser('secret'));
 
     app.get('/', function(req, res) {
         //TODO clicet request token and key by AJAX
