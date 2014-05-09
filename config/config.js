@@ -25,6 +25,7 @@ var config = {
       name: 'photo-sharing-app'
     },
     port: 3000,
+    sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-development',
     dbOptions: mongoOptions
   },
@@ -35,8 +36,9 @@ var config = {
       name: 'photo-sharing-app'
     },
     port: 3000,
+    sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-test',
-    dbOptions: mongoOptions
+    dbOptions: mongoOptions,
   },
 
   production: {
@@ -45,6 +47,7 @@ var config = {
       name: 'photo-sharing-app'
     },
     port: 3000,
+    sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-production',
     dbOptions: mongoOptions
   }

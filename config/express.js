@@ -1,11 +1,10 @@
 var express = require('express'),
     compress = require('compression'),
-    bodyParser = require('body-parser'),
     multiparty = require('connect-multiparty'),
     methodOverride = require('method-override'),
+    session = require('cookie-session'),
     logger = require('morgan'),
     cloud = require('../app/models/cloud'),
-    cookieParser = require('cookie-parser'),
     utils = require('../app/utils/utils');
 
 module.exports = function(app, config) {
@@ -16,10 +15,13 @@ module.exports = function(app, config) {
     app.set('views', config.root + '/app/views');
     app.set('view engine', 'jade');
     app.use(logger('dev'));
-    app.use(bodyParser());
     app.use(multiparty());
     app.use(methodOverride());
-    app.use(cookieParser('secret'));
+    app.use(session({
+      name: config.app.name,
+      keys: [config.app.name],
+      maxage: config.sessionMaxAge
+    }));
 
     app.get('/', function(req, res) {
         //TODO clicet request token and key by AJAX
@@ -31,6 +33,10 @@ module.exports = function(app, config) {
 
     app.get('/photo', function(req, res) {
         res.render('photo/view-photo');
+    });
+
+    app.get('/admin', function(req, res) {
+        res.render('admin/admin');
     });
 
 };

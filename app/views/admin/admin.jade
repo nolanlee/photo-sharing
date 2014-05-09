@@ -1,1 +1,17 @@
-h1 Admin
+extends ../layout
+block css
+  link(rel='stylesheet', href='/css/admin.css')
+
+block content
+  div#login-container
+  label Username:
+    input#username
+    label Password:
+    input#password(type='password')
+    button#login Login
+  div#logout-container
+    button#logout Logout
+  div#content
+
+block js
+  script(src='/js/admin.js')

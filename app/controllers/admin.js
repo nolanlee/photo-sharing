@@ -5,19 +5,39 @@ var mongoose = require('mongoose'),
   api = {};
 
 // GET
+api.init = function(req, res) {
+  new Admin().save(function(err) {
+    if(err) {
+
+      return res.json(500, err);
+
+    } else {
+      return res.json(201, 'init success');
+    }
+  });
+};
+
+// GET
 api.login = function(req, res) {
-	var username = req.params.username,
-		password = req.params.password;
+	var username = req.query.username || '',
+		password = req.query.password || '';
 
 	Admin.findOne({username: username, password: password}, function(err, admin) {
 		if(admin) {
-			res.cookie('admin', 'tobi', { maxAge: 900000, signed: true });
+			req.session.views += 1;
 
 			res.send(200);
 		} else {
 			res.send(500);
 		}
 	});
+};
+
+// GET
+api.logout = function(req, res) {
+  req.session = null;
+
+  res.json(200);
 };
 
 // GET

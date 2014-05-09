@@ -1,0 +1,6 @@
+#login-container {
+  display: block;
+}
+#logout-container {
+  display: none;
+}

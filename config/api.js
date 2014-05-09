@@ -1,5 +1,12 @@
+var session = require('cookie-session');
+
 module.exports = function(app){
 
+  var auth = function (req, res, next) {
+    var n = req.session.views || 0;
+    console.log(n + ' views');
+    next();
+  };
 	//Photo route
 	var Photo = require('../app/controllers/photo');
 
@@ -13,6 +20,10 @@ module.exports = function(app){
   //Admin route
   var Admin = require('../app/controllers/admin');
 
+  app.get('/api/admin/init', Admin.init);
+
   app.get('/api/admin/login', Admin.login);
+  app.get('/api/admin/logout', Admin.logout);
+  app.get('/api/admin/getPhotos', Admin.getPhotos)
 
 };
