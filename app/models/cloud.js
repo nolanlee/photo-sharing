@@ -1,7 +1,7 @@
-var qiniu = require('qiniu'),
-  appName = require('../../config/config').app.name,
-  bucketname = 'photo-sharing',
-  Cloud = {};
+var qiniu = require('qiniu')
+  , appName = require('../../config/config').app.name
+  , bucketname = 'photo-sharing'
+  , Cloud = {};
 
 // qiniu config
 qiniu.conf.ACCESS_KEY = 'MRAdl5snFiX5o51ipBt2VxcMfHr3AANHcspH2aCc';

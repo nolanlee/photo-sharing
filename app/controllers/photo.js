@@ -1,10 +1,10 @@
-var mongoose = require('mongoose'),
-  Photo = mongoose.model('Photo'),
-  cloud = require('../models/cloud'),
-  utils = require('../utils/utils'),
-  api = {};
+var mongoose = require('mongoose')
+  , Photo = mongoose.model('Photo')
+  , cloud = require('../models/cloud')
+  , utils = require('../utils/utils')
+  , api = {};
 
-var editPhoto = function(id, data, callback) {
+var editPhotoById = function(id, data, callback) {
   Photo.findByIdAndUpdate(id, data, callback);
 };
 
@@ -12,9 +12,9 @@ var freezePhoto = function(photo, callback) {
 
   var isFreezed = false;
 
-  if(!photo.deleted && photo.warningDate && (Date.now() - new Date(photo.warningDate).getTime() > 8640000) ) {
-    editPhoto(photo._id, {
-      deleted: true
+  if(!photo.freeze && photo.warningDate && (Date.now() - new Date(photo.warningDate).getTime() > 8640000) ) {
+    editPhotoById(photo._id, {
+      freeze: true
     }, function(err) {
       isFreezed = !err;
       callback(isFreezed);
@@ -27,14 +27,10 @@ var freezePhoto = function(photo, callback) {
 
 // ALL
 api.getPhotos = function(req, res) {
-  console.log(req.cookies);
-  console.log(req.signedCookies);
-  
   Photo.find(function(err, photos) {
     if(err) {
       res.json(500, err);
     } else {
-      res.cookie('admin', 'tobi', { maxAge: 900000, signed: true });
       res.json({
         photos: photos
       });
@@ -55,13 +51,13 @@ api.getPhoto = function(req, res) {
         // if someone complain photo and the complain data over one day, system should freeze the photo
         freezePhoto(photo, function(isFreezed) {
           if(isFreezed) {
-            res.json(404, "Photo is null");
+            res.json(404, { msg: "Photo is null" });
           } else {            
             res.json(200, photo.toObject());
           }
         });
       } else {
-        res.json(404, "Photo is null");
+        res.json(404, { msg: "Photo is null" });
       }
     }
 
@@ -76,7 +72,7 @@ api.getPhotoDetails = function(req, res) {
     if(err) {
       res.json(404, err);
     } else if(!photo || photo.deleted) {
-      res.json(404, "Photo is null");
+      res.json(404, { msg: "Photo is null" });
     } else {
       res.json(200, photo.details);
     }
@@ -85,11 +81,11 @@ api.getPhotoDetails = function(req, res) {
 
 // POST
 api.addPhoto = function(req, res) {
-  var photo,
-    photoPath,
-    id = mongoose.Types.ObjectId(),
-    url = cloud.getPhotoURL(req.body.key),
-    passcode = utils.generatePasscode();
+  var photo
+    , photoPath
+    , id = mongoose.Types.ObjectId()
+    , url = cloud.getPhotoURL(req.body.key)
+    , passcode = utils.generatePasscode();
 
   photo = new Photo({
     _id: id, 
@@ -103,8 +99,6 @@ api.addPhoto = function(req, res) {
       description: req.body.description
     }
   });
-
-
 
   photo.save(function(err) {
     if(err) {
@@ -123,18 +117,52 @@ api.addPhoto = function(req, res) {
 };
 
 // PUT
+api.freezePhoto = function(req, res) {
+  var id = req.body.id;
+
+  editPhotoById(id, {
+    freeze: true
+  }, function(err) {
+    console.log('im ending....');
+    if(err) {
+      res.send(500);
+    } else {
+      res.send(204);
+    }
+  });
+};
+
+// PUT
+api.unfreezePhoto = function(req, res) {
+  var id = req.body.id;
+
+  Photo.findOneAndUpdate({ _id: id, freeze: true }, { freeze: false, $unset : { warningDate : ''} }, function(err) {
+    if(err) {
+      res.send(500);
+    } else {
+      res.send(204);
+    }
+  });
+};
+
+// PUT
 api.complainPhoto = function(req, res) {
   var id = req.body.id;
 
   Photo.findById(id, function(err, photo) {
-    if(photo.warningDate) {
+    if(err) {
+      res.send(500, err);
+    } else if (!photo || photo.deleted) {
+       res.send(500, 'Photo is null');
+    } else if(photo.warningDate) {
       return res.send(204);
     } else {
-      editPhoto(id, {
+      editPhotoById(id, {
+        freeze: true,
         warningDate: new Date()
       }, function(err) {
         if(err) {
-          return res.json(500, 'complain failed');
+          return res.json(500, { msg: 'complain failed' });
         } else {
           return res.send(204);
         }
@@ -146,22 +174,22 @@ api.complainPhoto = function(req, res) {
 
 // PUT
 api.deletePhoto = function(req, res) {
-  var id = req.body.id,
-    passcode = req.body.passcode;
+  var id = req.body.id
+    , passcode = req.body.passcode;
 
   if(passcode) {
     Photo.findOne({_id: id, passcode: passcode}, function(err, photo) {
       if(err || !photo) {
-        return res.json(500, err || 'passcode is invalid');
+        return res.json(500, err || { msg: 'passcode is invalid' });
       } else if( photo.deleted) {
-        return res.json(500, 'photo is null');
+        return res.json(500, { msg: 'photo is null' });
       } else {
-        editPhoto(id, {
+        editPhotoById(id, {
           passcode: passcode,
           deleted: true
         }, function(err) {
           if(err) {
-            return res.json(500, 'delete failed');
+            return res.json(500, { msg: 'delete failed' });
           } else {
             return res.send(204);
           }
@@ -169,7 +197,7 @@ api.deletePhoto = function(req, res) {
       }
     });
   } else {
-    return res.json(500, 'passcode is null');
+    return res.json(500, { msg: 'passcode is null' });
   }
 };
 

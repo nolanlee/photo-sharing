@@ -1,9 +1,9 @@
 !function($) {
 
-  var $photo = $('#photo'),
-    $description = $('#description'),
-    parameters = location.search.substr(1),
-    photoId = parameters.substring(parameters.indexOf('id=') + 3);
+  var $photo = $('#photo')
+    , $description = $('#description')
+    , parameters = location.search.substr(1)
+    , photoId = parameters.substring(parameters.indexOf('id=') + 3);
 
   $.get('api/photo/' + photoId, function(data) {
     $photo.attr('src', data.url);
@@ -12,10 +12,10 @@
   });
 
   var initDeleteDialog = function() {
-    var $deleteBtn = $('#delete-btn'),
-      $cancelBtn = $('#cancel-btn'),
-      $passcode = $('#passcode'),
-      $deleteDialog = $('#deleteDialog');
+    var $deleteBtn = $('#delete-btn')
+      , $cancelBtn = $('#cancel-btn')
+      , $passcode = $('#passcode')
+      , $deleteDialog = $('#deleteDialog');
 
     $deleteBtn.click(function() {
       $.ajax({
@@ -25,7 +25,7 @@
           passcode: $passcode.val()
         }),
         contentType: 'application/json',
-        url: 'api/photo/delete/' + photoId,
+        url: 'api/photo/delete',
         success: function() {
           alert('delete success');
           window.location.href = window.location.origin;
@@ -47,7 +47,7 @@
           id: photoId
         }),
         contentType: 'application/json',
-        url: 'api/photo/complain/' + photoId,
+        url: 'api/photo/complain',
         success: function() {
           alert('complain success');
         },

@@ -1,5 +1,5 @@
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+var mongoose = require('mongoose')
+  , Schema = mongoose.Schema;
 
 var photoSchema = new Schema({
   url: String,
@@ -12,6 +12,7 @@ var photoSchema = new Schema({
     }
   },
   passcode: { type: String },
+  freeze: { type: Boolean, default: false },
   warningDate: Date,
   deleted: { type: Boolean, default: false }
 });

@@ -1,8 +1,8 @@
 var Utils = {};
 
 Utils.generatePasscode = function() {
-  var passcode = '',
-    length = 6;
+  var passcode = ''
+    , length = 6;
 
   while(length--) {
     passcode += ~~(Math.random() * 10);

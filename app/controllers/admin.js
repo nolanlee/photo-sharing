@@ -1,30 +1,20 @@
-var mongoose = require('mongoose'),
-  Admin = mongoose.model('Admin'),
-  Photo = mongoose.model('Photo'),
-  cloud = require('../models/cloud'),
-  api = {};
-
-// GET
-api.init = function(req, res) {
-  new Admin().save(function(err) {
-    if(err) {
-
-      return res.json(500, err);
-
-    } else {
-      return res.json(201, 'init success');
-    }
-  });
-};
+var mongoose = require('mongoose')
+  , Admin = mongoose.model('Admin')
+  , Photo = mongoose.model('Photo')
+  , session = require('cookie-session')
+  , cloud = require('../models/cloud')
+  , api = {
+    middleware: {}
+  };
 
 // GET
 api.login = function(req, res) {
-	var username = req.query.username || '',
-		password = req.query.password || '';
+	var username = req.query.username || ''
+		, password = req.query.password || '';
 
 	Admin.findOne({username: username, password: password}, function(err, admin) {
 		if(admin) {
-			req.session.views += 1;
+      req.session.isLogin = true;
 
 			res.send(200);
 		} else {
@@ -40,19 +30,12 @@ api.logout = function(req, res) {
   res.json(200);
 };
 
-// GET
-api.getPhotos = function(req, res) {
-
-};
-
-// PUT
-api.unfreezePhotos = function(req, res) {
-
-};
-
-// DELETE
-api.deletePhotos = function(req, res) {
-
+api.middleware.authorized = function(req, res, next) {
+  if(req.session.isLogin) {
+    next();
+  } else {
+    res.json(401, { msg: 'unauthorized' });
+  }
 };
 
 module.exports = api;

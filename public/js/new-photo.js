@@ -1,16 +1,16 @@
 !function($) {
 
-  var $form = $('#photoForm'),
-      $choose = $('#choose'),
-      $file = $('#file'),
-      $preview = $('#preview'),
-      $result = $('#result'),
-      $description = $('#description'),
-      $key = $('#cloud-key'),
-      $token = $('#cloud-token'),
-      $link = $('#sharing-link'),
-      $passcode = $('#passcode'),
-      location;
+  var $form = $('#photoForm')
+    , $choose = $('#choose')
+    , $file = $('#file')
+    , $preview = $('#preview')
+    , $result = $('#result')
+    , $description = $('#description')
+    , $key = $('#cloud-key')
+    , $token = $('#cloud-token')
+    , $link = $('#sharing-link')
+    , $passcode = $('#passcode')
+    , location;
 
   //******************* EXIF helper **********************
   var gpsFormatter = function(exifCoord, hemi) {

@@ -1,13 +1,11 @@
-var path = require('path'),
-    rootPath = path.normalize(__dirname + '/..'),
-    env = process.env.NODE_ENV || 'development';
+var path = require('path')
+  , rootPath = path.normalize(__dirname + '/..')
+  , env = process.env.NODE_ENV || 'development';
 
 // db config
 var dbconfig = {
   "db": "photo-sharing",  
-  "host": "localhost",  
-  // "user": "nolan",
-  // "pw": "123456",
+  "host": "localhost", 
   "port": 27017
 };
 
