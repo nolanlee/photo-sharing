@@ -2,23 +2,29 @@ extends ../layout
 
 block css
   link(rel='stylesheet', href='/css/new-photo.css')
+  link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Parisienne" )
 
 block content
-  form(id='photoForm')
-    input(id='cloud-token', name='token', type='hidden', value= token)
-    input(id='cloud-key', name='key', type='hidden', value= key)
-    input(id='file', class='photoInput', type='file', name='file')
-    input(id='choose', class='photoInput', type='button' value='Choose')
-    textarea(id='description', class='photoInput', name='description', placeholder='Description')
-    input(class='photoInput', type='submit' name='submit')
-    label(class='label') Preview
-    img(id='preview', class='photo')
-    label(class='label') Result
-    img(id='result', class='photo')
-    label(class='label') URL:
-    span(id='sharing-link')
-    lable(calss='label') Passcode:
-    span(id='passcode')
+  div.header
+    h1.title iPhotoSharing
+  form#photoForm
+    div.photo-fieldset
+      input#file.upload-input(type='file', name='file')
+      a#choose.upload-button(href='javascript:void(0);') Choose
+    div.photo-form-popup
+      img#preview
+      label.photo-form-label(for='description') Description
+      input#description.photo-form-control(name='description', placeholder='Why you share the photo?')
+      input#cloudToken(name='token', type='hidden', value= token)
+      input#cloudKey(name='key', type='hidden', value= key)
+      button.photo-form-button.primary-button(type='submit' name='submit') Submit
+      button.photo-form-button Cancel
+  div#photoDetails.photo-popup
+    img#result
+    label.photo-form-label URL:
+    span#sharingLink
+    label.photo-form-label Passcode:
+    span#passcode
     
 block js
   script(src='/js/exif.js')

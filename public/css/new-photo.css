@@ -1,20 +1,83 @@
-#photoForm {
-  position: relative;
-  top: 50px;
+body {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.header {
+  box-shadow: 0 1px 10px #000;
+  -webkit-box-shadow: 0 1px 10px #000;
+  -moz-box-shadow: 0 1px 10px #000;
+  -ie-box-shadow: 0 1px 10px #000;
+}
+.header .title {
+  padding-top: 10px;
+  padding-bottom: 15px;
   margin: 0 auto;
-  width: 400px;
-  border: 1px solid #aaa;
-  box-shadow: 0 0 5px #aaa;
+  font-weight: normal;
+  font-size: 50px;
+  font-family: 'Parisienne', cursive;
+  line-height: 50px;
+  text-align: center;
 }
-#photoForm .photoInput {
+@-webkit-keyframes 'init' {
+    0% {
+        border-radius: 50%;
+    }
+    100% {
+        border-radius: 0px;
+    }
+}
+.photo-fieldset .upload-button {
   display: block;
-  margin-top: 20px; 
+  margin: 200px auto 0;
+  width: 150px;
+  height: 150px;
+  background-color: #272822;
+  color: transparent;
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -ie-transform: rotate(135deg);
+  box-shadow: 0px 0px 6px 0px #000;
+  -webkit-box-shadow: 0px 0px 6px 0px #000;
+  -moz-box-shadow: 0px 0px 6px 0px #000;
+  -ie-box-shadow: 0px 0px 6px 0px #000;
+  -webkit-animation-name:'init';
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: 1;
+  font-size: 0;
+  line-height: 0;
 }
-#photoForm #file {
+.photo-fieldset .upload-input {
   display: none;
 }
-#photoForm .photo {
-  max-width: 100%;
-  min-width: 320px;
-  margin: 0 auto;
+.photo-fieldset .upload-button:before, .photo-fieldset .upload-button:after {
+  display: block;
+  content: "";
+  position: relative;
+  background: #74dd74;
+}
+.photo-fieldset .upload-button:before {
+  width: 3px;
+  height: 40%;
+  left: 35%;
+  top: 25%;
+}
+.photo-fieldset .upload-button:after {
+  top: 5%;
+  left: 55%;
+  width: 3px;
+  height: 40%;
+  transform-origin: left;
+  transform: rotate(-90deg);
+  -webkit-transform-origin: left;
+  -webkit-transform: rotate(-90deg);
+} 
+.photo-fieldset .upload-button:active {
+  box-shadow: inset 0px 0px 6px 0px #000;
+  -webkit-box-shadow: inset 0px 0px 6px 0px #000;
+  -moz-box-shadow: inset 0px 0px 6px 0px #000;
+  -ie-box-shadow: inset 0px 0px 6px 0px #000;
 }

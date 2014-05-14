@@ -6,9 +6,9 @@
     , $preview = $('#preview')
     , $result = $('#result')
     , $description = $('#description')
-    , $key = $('#cloud-key')
-    , $token = $('#cloud-token')
-    , $link = $('#sharing-link')
+    , $key = $('#cloudKey')
+    , $token = $('#cloudToken')
+    , $link = $('#sharingLink')
     , $passcode = $('#passcode')
     , location;
 
