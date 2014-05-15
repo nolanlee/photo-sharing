@@ -10,6 +10,8 @@
     , $token = $('#cloudToken')
     , $link = $('#sharingLink')
     , $passcode = $('#passcode')
+    , $cancel = $('#cancel')
+    , $formPopup = $('.photo-form-popup')
     , location;
 
   //******************* EXIF helper **********************
@@ -104,6 +106,11 @@
 
   var openFileUpload = function() {
     $file.trigger('click');
+    $description.val('');
+  };
+
+  var closePopup = function() {
+    $formPopup.css('display', 'none');
   };
 
   var preview = function(e) {
@@ -128,6 +135,8 @@
       reader.readAsDataURL(file);
 
       reader.onload = function() {
+        $formPopup.css('display', 'block');
+        $description.focus();
         $preview.attr('src', this.result);
       }
     }
@@ -135,6 +144,7 @@
 
   $file.on('change', preview);
   $choose.on('click', openFileUpload);
+  $cancel.on('click', closePopup);
   $form.on('submit', submitFile);
 
 }($);

@@ -4,6 +4,8 @@ body {
   padding: 0;
   color: #f8f8f2;
   background-color: #272822;
+  font-size: 24px;
+  font-family: cursive;
 }
 .header {
   box-shadow: 0 1px 10px #000;
@@ -21,11 +23,19 @@ body {
   line-height: 50px;
   text-align: center;
 }
-@-webkit-keyframes 'init' {
+@-webkit-keyframes init {
     0% {
         border-radius: 50%;
     }
     100% {
+        border-radius: 0px;
+    }
+}
+@keyframes init {
+    from {
+        border-radius: 50%;
+    }
+    to {
         border-radius: 0px;
     }
 }
@@ -44,11 +54,16 @@ body {
   -webkit-box-shadow: 0px 0px 6px 0px #000;
   -moz-box-shadow: 0px 0px 6px 0px #000;
   -ie-box-shadow: 0px 0px 6px 0px #000;
-  -webkit-animation-name:'init';
-  -webkit-animation-duration: 1s;
-  -webkit-animation-iteration-count: 1;
   font-size: 0;
   line-height: 0;
+}
+.upload-button-animation {
+  -webkit-animation-name:init;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-iteration-count: 1;
+  animation-name: init;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
 }
 .photo-fieldset .upload-input {
   display: none;
@@ -58,6 +73,10 @@ body {
   content: "";
   position: relative;
   background: #74dd74;
+  box-shadow: 0 0 10px #74dd74;
+  -webkit-box-shadow: 0 0 10px #74dd74;
+  -moz-box-shadow: 0 0 10px #74dd74;
+  -ie-box-shadow: 0 0 10px #74dd74;
 }
 .photo-fieldset .upload-button:before {
   width: 3px;
@@ -80,4 +99,150 @@ body {
   -webkit-box-shadow: inset 0px 0px 6px 0px #000;
   -moz-box-shadow: inset 0px 0px 6px 0px #000;
   -ie-box-shadow: inset 0px 0px 6px 0px #000;
+}
+.photo-form-popup {
+  display: none;
+}
+.photo-form-popup .photo-form-details {
+  position: absolute;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #272822;
+  z-index: 1;
+}
+.photo-form-details .photo-form-control {
+  width: 100%;
+}
+
+.photo-form-details .photo-form-control {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  outline: none;
+  padding: 12px 10px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: transparent;
+  font-size: inherit;
+}
+.photo-form-details .photo-form-control:focus {
+  box-shadow: inset 0 0 3px #000;
+  -webkit-box-shadow: inset 0 0 3px #000;
+  -moz-box-shadow: inset 0 0 3px #000;
+  -ie-box-shadow: inset 0 0 3px #000;
+}
+.photo-form-button {
+  display: inline-block;
+  font-family: inherit;
+  background:transparent;
+  overflow:visible;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: inherit;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-color: rgba(0, 0, 0, 0.3);
+  color: inherit;
+}
+.photo-form-button:active {
+  box-shadow: inset 0px 0px 6px 0px #000;
+  -webkit-box-shadow: inset 0px 0px 6px 0px #000;
+  -moz-box-shadow: inset 0px 0px 6px 0px #000;
+  -ie-box-shadow: inset 0px 0px 6px 0px #000;
+}
+.primary-button {
+  background-color: rgba(0, 0, 0, .3);
+}
+.photo-form-details #description {
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  overflow-x: hidden;
+  color: inherit;
+}
+@media screen and (min-width: 769px) {
+  .photo-form-popup:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    content: "";
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(39, 40, 34, .8);
+  }
+  .photo-form-popup .photo-form-details {
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 38%;
+    height: auto;
+    top: 30%;
+    box-shadow: 0 1px 10px #000;
+    -webkit-box-shadow: 0 1px 10px #000;
+    -moz-box-shadow: 0 1px 10px #000;
+    -ie-box-shadow: 0 1px 10px #000;
+  }
+  .photo-form-details #description {
+    margin-left: 10px;
+    width: 61%;
+    height: 200px;
+  }
+  .photo-form-details #preview {
+    vertical-align: top;
+    width: 35%;
+    border-radius: 5px;
+  }
+  .photo-form-button {
+    float: right;
+    margin-top: 10px;
+  }
+  .primary-button {
+    margin-right: 10px;
+  }
+
+}
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 20px;
+  }
+  .header .title {
+    font-size: 20px;
+  }
+  .photo-form-popup .photo-form-details {
+    width: 100%;
+    top: 80px;
+    bottom: 0;
+  }
+  .photo-form-details #description {
+    margin-top: 10px;
+    height: 200px;
+  }
+  .photo-form-details #preview {
+    width: 100px;
+  }
+  .photo-form-button {
+    position: absolute;
+    top: -64px;
+    font-size: 16px;
+  }
+  #submit {
+    right: 10px;
+  }
+  #cancel {
+    left: 10px;
+  }
+}
+#photoDetails {
+  display: none;
 }

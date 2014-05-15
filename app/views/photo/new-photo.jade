@@ -2,24 +2,24 @@ extends ../layout
 
 block css
   link(rel='stylesheet', href='/css/new-photo.css')
-  link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Parisienne" )
+  link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Parisienne' )
 
 block content
   div.header
     h1.title iPhotoSharing
   form#photoForm
     div.photo-fieldset
-      input#file.upload-input(type='file', name='file')
-      a#choose.upload-button(href='javascript:void(0);') Choose
+      input#file.upload-input(type='file', name='file', accept='image/*')
+      a#choose.upload-button.upload-button-animation(href='javascript:void(0);') Choose
     div.photo-form-popup
-      img#preview
-      label.photo-form-label(for='description') Description
-      input#description.photo-form-control(name='description', placeholder='Why you share the photo?')
-      input#cloudToken(name='token', type='hidden', value= token)
-      input#cloudKey(name='key', type='hidden', value= key)
-      button.photo-form-button.primary-button(type='submit' name='submit') Submit
-      button.photo-form-button Cancel
-  div#photoDetails.photo-popup
+      div.photo-form-details
+        img#preview.photo-form-popup-control
+        textarea#description.photo-form-control.photo-form-popup-control(name='description', placeholder='Description')
+        input#cloudToken(name='token', type='hidden', value= token)
+        input#cloudKey(name='key', type='hidden', value= key)
+        button#cancel.photo-form-button.photo-form-popup-control(type='button') Cancel
+        button#submit.photo-form-button.primary-button.photo-form-popup-control(type='submit' name='submit') Submit
+  div#photoDetails
     img#result
     label.photo-form-label URL:
     span#sharingLink
