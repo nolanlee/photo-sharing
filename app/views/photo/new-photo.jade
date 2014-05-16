@@ -17,14 +17,15 @@ block content
         textarea#description.photo-form-control.photo-form-popup-control(name='description', placeholder='Description')
         input#cloudToken(name='token', type='hidden', value= token)
         input#cloudKey(name='key', type='hidden', value= key)
-        button#cancel.photo-form-button.photo-form-popup-control(type='button') Cancel
-        button#submit.photo-form-button.primary-button.photo-form-popup-control(type='submit' name='submit') Submit
-  div#photoDetails
+        button#cancel.photo-button.photo-form-button.photo-form-popup-control(type='button') Cancel
+        button#submit.photo-button.photo-form-button.primary-button.photo-form-popup-control(type='submit' name='submit') Submit
+  div#photoResult
     img#result
-    label.photo-form-label URL:
-    span#sharingLink
-    label.photo-form-label Passcode:
-    span#passcode
+    label.photo-form-label Copy and share everywhere:
+    span#sharingLink.photo-info
+    label.photo-form-label Passcode (if you think you will delete the image one day, please remember it):
+    span#passcode.photo-info
+    button#back.photo-button(type='button') Back  
     
 block js
   script(src='/js/exif.js')

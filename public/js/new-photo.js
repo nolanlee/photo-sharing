@@ -1,6 +1,7 @@
 !function($) {
 
   var $form = $('#photoForm')
+    , $photoResult = $('#photoResult')
     , $choose = $('#choose')
     , $file = $('#file')
     , $preview = $('#preview')
@@ -11,6 +12,7 @@
     , $link = $('#sharingLink')
     , $passcode = $('#passcode')
     , $cancel = $('#cancel')
+    , $back = $('#back')
     , $formPopup = $('.photo-form-popup')
     , location;
 
@@ -56,6 +58,14 @@
     }
   };
 
+  var uploadSuccess = function(data) {
+    $form.css('display', 'none');
+    $photoResult.css('display', 'block');
+    $result.attr('src', data.url);
+    $link.html(window.location.origin + '/photo?id=' + data.id);
+    $passcode.html(data.passcode);
+  };
+
   var submitFile = function(event) {
       var detailData, fileData;
 
@@ -93,11 +103,7 @@
             contentType: false,
             processData: false,
             data: detailData,
-            success: function(data) {
-              $result.attr('src', data.url);
-              $link.html(window.location.origin + '/photo?id=' + data.id);
-              $passcode.html(data.passcode);                         
-            }
+            success: uploadSuccess
           });   
         }
       });
@@ -142,9 +148,14 @@
     }
   };
 
+  var back = function() {
+    window.location.href = window.location.origin;
+  };
+
   $file.on('change', preview);
   $choose.on('click', openFileUpload);
   $cancel.on('click', closePopup);
+  $back.on('click', back);
   $form.on('submit', submitFile);
 
 }($);

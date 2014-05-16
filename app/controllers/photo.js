@@ -123,7 +123,6 @@ api.freezePhoto = function(req, res) {
   editPhotoById(id, {
     freeze: true
   }, function(err) {
-    console.log('im ending....');
     if(err) {
       res.send(500);
     } else {

@@ -5,17 +5,20 @@
     , parameters = location.search.substr(1)
     , photoId = parameters.substring(parameters.indexOf('id=') + 3);
 
-  $.get('api/photo/' + photoId, function(data) {
-    $photo.attr('src', data.url);
-    $description.html(data.details.description);
-    initMap(data.details.location.latitude, data.details.location.longitude);
-  });
-
   var initDeleteDialog = function() {
-    var $deleteBtn = $('#delete-btn')
-      , $cancelBtn = $('#cancel-btn')
+    var $deleteLink = $('#deleteLink')
+      , $deleteBtn = $('#deleteBtn')
+      , $cancelBtn = $('#cancelBtn')
       , $passcode = $('#passcode')
       , $deleteDialog = $('#deleteDialog');
+
+    $deleteLink.on('click', function() {
+      $deleteDialog.css('display', 'block');
+    });
+
+    $cancelBtn.on('click', function() {
+      $deleteDialog.css('display', 'none');
+    });
 
     $deleteBtn.click(function() {
       $.ajax({
@@ -27,7 +30,6 @@
         contentType: 'application/json',
         url: 'api/photo/delete',
         success: function() {
-          alert('delete success');
           window.location.href = window.location.origin;
         },
         error: function() {
@@ -35,6 +37,7 @@
         }
       });
     });
+   
   };
 
   var initComplaint = function() {
@@ -58,46 +61,89 @@
     });
   };
 
-  initComplaint();
-
   var initMap = function(latitude, longitude) {
     if(latitude !== 0 || longitude !== 0) {
-      var $mapCanvas = $('#map-canvas');
+      var $mapCanvas = $('#mapCanvas')
+        , $mapContainer = $('#mapContainer')
+        , $mapLink = $('#mapLink')
+        , $closeMap = $('#closeMap');
 
-      var marker = new google.maps.Marker({
-          position:  new google.maps.LatLng(31.209668, 121.595222)
+      $mapLink.css('display', 'inline-block');
+
+      $mapLink.on('click', function() {
+        $mapContainer.css('display', 'block');
+
+        if($mapCanvas.height() === 0) {
+          var marker = new google.maps.Marker({
+              position:  new google.maps.LatLng(31.209668, 121.595222)
+          });
+
+          $mapCanvas.height(300);
+
+          var mapOptions = {
+            center: new google.maps.LatLng(latitude, longitude),
+            zoom: 15,
+            draggable: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map = new google.maps.Map($mapCanvas[0], mapOptions);
+
+          marker.setMap(map);
+        }
+      }); 
+
+      $closeMap.on('click', function() {
+        $mapContainer.css('display', 'none');
       });
-
-      $mapCanvas.height(300);
-
-      var mapOptions = {
-        center: new google.maps.LatLng(latitude, longitude),
-        zoom: 15,
-        draggable: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map($mapCanvas[0], mapOptions);
-
-      marker.setMap(map);
     }
   };
 
-  initDeleteDialog();
-
   // SOHU Chang Yan
+  // var showComment = function() {
+  //   var appid = 'cyr9e2pRf',
+  //   conf = 'prod_02b37847bda87d90570abc684f5bd343';
+  //   var doc = document,
+  //     s = doc.createElement('script'),
+  //     h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+  //   s.type = 'text/javascript';
+  //   s.charset = 'utf-8';
+  //   s.src = 'http://assets.changyan.sohu.com/upload/changyan.js?conf=' + conf + '&appid=' + appid;
+  //   h.insertBefore(s, h.firstChild);
+  //   window.SCS_NO_IFRAME = true;
+  // };
+
+  // Disqus
   var showComment = function() {
-    var appid = 'cyr9e2pRf',
-    conf = 'prod_02b37847bda87d90570abc684f5bd343';
-    var doc = document,
-      s = doc.createElement('script'),
-      h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
-    s.type = 'text/javascript';
-    s.charset = 'utf-8';
-    s.src = 'http://assets.changyan.sohu.com/upload/changyan.js?conf=' + conf + '&appid=' + appid;
-    h.insertBefore(s, h.firstChild);
-    window.SCS_NO_IFRAME = true;
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'iphotosharing'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
   };
 
+  var init = function() {
+    $('.title').on('click', function() {
+      window.location.href = window.location.origin;
+    });
+
+    $.get('api/photo/' + photoId, function(data) {
+      $photo.attr('src', data.url);
+      if(data.details.description && data.details.description.length > 0) {
+        $description.html(data.details.description);
+      } else {
+        $('#descriptionGroup').css('display', 'none');
+      }
+      initMap(data.details.location.latitude, data.details.location.longitude);
+    });
+  }
+ 
+  init();
+  initComplaint();
+  initDeleteDialog();
   showComment();
 
 }($);

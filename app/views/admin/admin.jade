@@ -4,14 +4,17 @@ block css
   link(rel='stylesheet', href='/css/admin.css')
 
 block content
-  div#login-container
-    label Username:
-    input#username
-    label Password:
-    input#password(type='password')
-    button#login Login
-  div#logout-container
-    button#logout Logout
+  div#alert.alert
+  div#loginContainer
+    div.form-group
+      label(for='username') Username:
+      input#username.form-control(placeholder='Enter username')
+    div.form-group
+      label(for='password') Password:
+      input#password.form-control(type='password')
+    button#login.btn.btn-default(type='submit') Login
+  div#logoutContainer
+    button#logout.btn.btn-default Logout
   div#content
 
 block js
