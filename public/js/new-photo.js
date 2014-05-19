@@ -1,6 +1,7 @@
 !function($) {
 
   var $form = $('#photoForm')
+    , $photoFieldset = $('.photo-fieldset')
     , $photoResult = $('#photoResult')
     , $choose = $('#choose')
     , $file = $('#file')
@@ -14,6 +15,8 @@
     , $cancel = $('#cancel')
     , $back = $('#back')
     , $formPopup = $('.photo-form-popup')
+    , $loadingContainer = $('#loadingContainer')
+    , $toast = $('#toast')
     , location;
 
   //******************* EXIF helper **********************
@@ -41,11 +44,11 @@
   };
 
   //******************* UI handler *************************
-  var loading = function(swiitch) {
+  var showLoading = function(swiitch) {
     if(swiitch) {
-
+      $loadingContainer.css('display', 'block');
     } else {
-
+      $loadingContainer.css('display', 'none');
     }
   };
 
@@ -59,6 +62,8 @@
   };
 
   var uploadSuccess = function(data) {
+    showLoading(false);
+
     $form.css('display', 'none');
     $photoResult.css('display', 'block');
     $result.attr('src', data.url);
@@ -88,6 +93,7 @@
       fileData.append('token', $token.val());
       fileData.append('file', $file[0].files[0]);
 
+      showLoading(true);
       //post to cloud
       $.ajax({
         type: 'POST',
@@ -117,9 +123,10 @@
 
   var closePopup = function() {
     $formPopup.css('display', 'none');
+    $photoFieldset.css('display', 'block');
   };
 
-  var preview = function(e) {
+  var fileReadyHandler = function(e) {
     var appVersion = window.navigator.appVersion;
 
     if (document.all && +appVersion.substring(appVersion.indexOf("MSIE ") + 5, appVersion.indexOf("; Windows")) < 10) {
@@ -130,21 +137,33 @@
       // $preview.attr('src', 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
 
     } else {
-      var file = e.target.files[0],
-          reader = new FileReader(); 
+      var file = e.target.files[0]
+        , FILE_SIZE_LIMIT = 8 * 1024 * 1024
+        , reader = new FileReader(); 
 
-      // get photo GPS information
-      EXIF.getData(file, function() {
-        location = getGPSInfo(file);
-      });
+      if(file.size > FILE_SIZE_LIMIT) {
+        $toast.css('display', 'block');
+        
+        setTimeout(function() {
+          $toast.fadeOut('slow');
+        }, 1000)
 
-      reader.readAsDataURL(file);
+      } else {
+        // get photo GPS information
+        EXIF.getData(file, function() {
+          location = getGPSInfo(file);
+        });
 
-      reader.onload = function() {
-        $formPopup.css('display', 'block');
-        $description.focus();
-        $preview.attr('src', this.result);
+        reader.readAsDataURL(file);
+
+        reader.onload = function() {
+          $photoFieldset.css('display', 'none');
+          $formPopup.css('display', 'block');
+          $description.focus();
+          $preview.attr('src', this.result);
+        }
       }
+
     }
   };
 
@@ -152,7 +171,7 @@
     window.location.href = window.location.origin;
   };
 
-  $file.on('change', preview);
+  $file.on('change', fileReadyHandler);
   $choose.on('click', openFileUpload);
   $cancel.on('click', closePopup);
   $back.on('click', back);

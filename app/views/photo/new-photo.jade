@@ -23,9 +23,28 @@ block content
     img#result
     label.photo-form-label Copy and share everywhere:
     span#sharingLink.photo-info
-    label.photo-form-label Passcode (if you think you will delete the image one day, please remember it):
+    label.photo-form-label Passcode 
+    p.photo-form-tip (if you think you will delete the image one day, please remember it)
     span#passcode.photo-info
-    button#back.photo-button(type='button') Back  
+    button#back.photo-button(type='button') Back
+  div#toast Image size must be less than 8MB
+  div#loadingContainer
+    div.spinner
+      div.spinner-container.container1
+        div.circle1
+        div.circle2
+        div.circle3
+        div.circle4
+      div.spinner-container.container2
+        div.circle1
+        div.circle2
+        div.circle3
+        div.circle4
+      div.spinner-container.container3
+        div.circle1
+        div.circle2
+        div.circle3
+        div.circle4
     
 block js
   script(src='/js/exif.js')

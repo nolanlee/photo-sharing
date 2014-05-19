@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
   , Photo = mongoose.model('Photo')
   , cloud = require('../models/cloud')
   , utils = require('../utils/utils')
+  , xss = require('xss')
   , api = {};
 
 var editPhotoById = function(id, data, callback) {
@@ -96,7 +97,9 @@ api.addPhoto = function(req, res) {
         latitude: +JSON.parse(req.body.location).latitude,
         longitude: +JSON.parse(req.body.location).longitude
       },
-      description: req.body.description
+      description: xss(req.body.description, {
+        whiteList: {}
+      })
     }
   });
 

@@ -63,6 +63,10 @@ body {
   background: transparent;
   font-family: inherit;
 }
+.header #new {
+  float: left;
+  margin: 18px 10px;
+}
 .header #complaint {
   float: right;
   margin: 18px 10px;

@@ -19,7 +19,8 @@
     "mongoose": "~3.8.8",
     "body-parser": "latest",
     "qiniu": "latest",
-    "node-uuid": "latest"
+    "node-uuid": "latest",
+    "xss": "latest"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

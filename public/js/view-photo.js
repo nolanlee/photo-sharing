@@ -126,9 +126,12 @@
   };
 
   var init = function() {
-    $('.title').on('click', function() {
+    var forwardNewView = function() {
       window.location.href = window.location.origin;
-    });
+    };
+
+    $('.title').on('click', forwardNewView);
+    $('#new').on('click', forwardNewView);
 
     $.get('api/photo/' + photoId, function(data) {
       $photo.attr('src', data.url);
