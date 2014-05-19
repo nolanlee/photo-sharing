@@ -1,3 +1,6 @@
+a, img {
+    -webkit-touch-callout: none; /* 禁止长按链接与图片弹出菜单 */
+}
 body {
   margin: 0;
   border: 0;
@@ -5,7 +8,8 @@ body {
   color: #f8f8f2;
   background-color: #272822;
   font-size: 24px;
-  font-family: cursive;
+  /*font-family: cursive;*/
+  font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
 }
 .header {
   box-shadow: 0 1px 10px #000;
@@ -139,14 +143,14 @@ body {
   display: none;
 }
 .popup:after {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   display: block;
   content: "";
   width: 100%;
   min-height: 100%;
-  background-color: rgba(39, 40, 34, .8);
+  background-color: rgba(0, 0, 0, .7);
 }
 .popup .popup-content {
   position: absolute;
@@ -175,7 +179,7 @@ body {
     font-size: 16px;
   }
   .header .title {
-    font-size: 20px;
+    font-size: 18px;
   }
   .popup .popup-content {
     width: 80%;

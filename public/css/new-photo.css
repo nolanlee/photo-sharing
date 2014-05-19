@@ -7,6 +7,9 @@ body {
   font-size: 24px;
   font-family: cursive;
 }
+a, img {
+    -webkit-touch-callout: none; /* 禁止长按链接与图片弹出菜单 */
+}
 .header {
   box-shadow: 0 1px 10px #000;
   -webkit-box-shadow: 0 1px 10px #000;
@@ -102,7 +105,7 @@ body {
 }
 .photo-form-popup {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -211,10 +214,10 @@ body {
 }
 @media screen and (max-width: 768px) {
   body {
-    font-size: 20px;
+    font-size: 16px;
   }
   .header .title {
-    font-size: 20px;
+    font-size: 18px;
   }
   .photo-form-popup {
     background: none;
