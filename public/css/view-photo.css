@@ -8,8 +8,7 @@ body {
   color: #f8f8f2;
   background-color: #272822;
   font-size: 24px;
-  /*font-family: cursive;*/
-  font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;
+  font-family: cursive;
 }
 .header {
   box-shadow: 0 1px 10px #000;
