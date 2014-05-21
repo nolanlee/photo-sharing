@@ -126,12 +126,14 @@
   };
 
   var init = function() {
+    var $new = $('#new');
+
     var forwardNewView = function() {
       window.location.href = window.location.origin;
     };
 
     $('.title').on('click', forwardNewView);
-    $('#new').on('click', forwardNewView);
+    $new.on('click', forwardNewView);
 
     $.get('/api/photo/' + photoId, function(data) {
       $photo.attr('src', data.url);
@@ -141,12 +143,16 @@
         $('#descriptionGroup').css('display', 'none');
       }
       initMap(data.details.location.latitude, data.details.location.longitude);
+      initComplaint();
+      initDeleteDialog();
+      showComment();
+    })
+    .fail(function() {
+      $('#complaint').css('display', 'none');
+      $('#container').html('<h1 style="text-align: center;">Photo is inexistent :(</h1>');
     });
   }
  
   init();
-  initComplaint();
-  initDeleteDialog();
-  showComment();
 
 }($);
