@@ -26,14 +26,13 @@ module.exports = function (app, config) {
   }));
 
   app.get('/', function (req, res) {
-    //TODO clicet request token and key by AJAX
     res.render('photo/new-photo', {
       token: cloud.getToken(),
       key: utils.generateUUID()
     });
   });
 
-  app.get('/photo', function (req, res) {
+  app.get('/photo/:id', function (req, res) {
     res.render('photo/view-photo');
   });
 

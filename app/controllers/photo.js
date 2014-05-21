@@ -2,6 +2,7 @@ var mongoose = require('mongoose')
   , Photo = mongoose.model('Photo')
   , cloud = require('../models/cloud')
   , utils = require('../utils/utils')
+  , config = require('../../config/config')
   , xss = require('xss')
   , api = {};
 
@@ -9,26 +10,11 @@ var editPhotoById = function(id, data, callback) {
   Photo.findByIdAndUpdate(id, data, callback);
 };
 
-var freezePhoto = function(photo, callback) {
-
-  var isFreezed = false;
-
-  if(!photo.freeze && photo.warningDate && (Date.now() - new Date(photo.warningDate).getTime() > 8640000) ) {
-    editPhotoById(photo._id, {
-      freeze: true
-    }, function(err) {
-      isFreezed = !err;
-      callback(isFreezed);
-    });
-  } else {
-    callback(isFreezed);
-  } 
-
-};
-
-// ALL
+// GET
 api.getPhotos = function(req, res) {
-  Photo.find(function(err, photos) {
+  Photo.find({
+    'status.deleted': false
+  }, function(err, photos) {
     if(err) {
       res.json(500, err);
     } else {
@@ -47,19 +33,10 @@ api.getPhoto = function(req, res) {
 
     if(err) {
       res.json(404, err);
+    } else if(!photo || photo.status.deleted || photo.status.freeze.status) {
+      res.json(404, { msg: "Photo is null" });
     } else {
-      if(photo && !photo.deleted) {
-        // if someone complain photo and the complain data over one day, system should freeze the photo
-        freezePhoto(photo, function(isFreezed) {
-          if(isFreezed) {
-            res.json(404, { msg: "Photo is null" });
-          } else {            
-            res.json(200, photo.toObject());
-          }
-        });
-      } else {
-        res.json(404, { msg: "Photo is null" });
-      }
+      res.json(200, photo.toObject());
     }
 
   });
@@ -72,7 +49,7 @@ api.getPhotoDetails = function(req, res) {
   Photo.findById(id, function(err, photo) {
     if(err) {
       res.json(404, err);
-    } else if(!photo || photo.deleted) {
+    } else if(!photo || photo.status.deleted || photo.status.freeze.status) {
       res.json(404, { msg: "Photo is null" });
     } else {
       res.json(200, photo.details);
@@ -124,27 +101,35 @@ api.freezePhoto = function(req, res) {
   var id = req.body.id;
 
   editPhotoById(id, {
-    freeze: true
+    'status.freeze': { 
+      status: true
+    }
   }, function(err) {
     if(err) {
-      res.send(500);
+      res.send(500, err);
     } else {
       res.send(204);
     }
   });
+
 };
 
 // PUT
 api.unfreezePhoto = function(req, res) {
   var id = req.body.id;
 
-  Photo.findOneAndUpdate({ _id: id, freeze: true }, { freeze: false, $unset : { warningDate : ''} }, function(err) {
+  editPhotoById(id, {
+    'status.freeze': { 
+      status: false
+    }
+  }, function(err) {
     if(err) {
-      res.send(500);
+      res.send(500, err);
     } else {
       res.send(204);
     }
   });
+
 };
 
 // PUT
@@ -154,15 +139,22 @@ api.complainPhoto = function(req, res) {
   Photo.findById(id, function(err, photo) {
     if(err) {
       res.send(500, err);
-    } else if (!photo || photo.deleted) {
+    } else if (!photo || photo.status.deleted || photo.status.freeze.status) {
        res.send(500, 'Photo is null');
-    } else if(photo.warningDate) {
-      return res.send(204);
     } else {
-      editPhotoById(id, {
-        freeze: true,
-        warningDate: new Date()
-      }, function(err) {
+      var updateData;
+
+      if(photo.status.freeze.count < config.freezeThreshold) {
+        updateData = {
+          'status.freeze.count': photo.status.freeze.count + 1
+        };
+      } else {
+        updateData = {
+          'status.freeze.status': true
+        };
+      }
+
+      editPhotoById(id, updateData, function(err) {
         if(err) {
           return res.json(500, { msg: 'complain failed' });
         } else {
@@ -175,7 +167,7 @@ api.complainPhoto = function(req, res) {
 };
 
 // PUT
-api.deletePhoto = function(req, res) {
+api.deletePhotoWithVerify = function(req, res) {
   var id = req.body.id
     , passcode = req.body.passcode;
 
@@ -183,24 +175,40 @@ api.deletePhoto = function(req, res) {
     Photo.findOne({_id: id, passcode: passcode}, function(err, photo) {
       if(err || !photo) {
         return res.json(500, err || { msg: 'passcode is invalid' });
-      } else if( photo.deleted) {
+      } else if( photo.status.deleted ) {
         return res.json(500, { msg: 'photo is null' });
       } else {
-        editPhotoById(id, {
-          passcode: passcode,
-          deleted: true
-        }, function(err) {
-          if(err) {
-            return res.json(500, { msg: 'delete failed' });
-          } else {
-            return res.send(204);
-          }
-        });
+        api.deletePhoto(req, res);
       }
     });
   } else {
     return res.json(500, { msg: 'passcode is null' });
   }
+};
+
+// PUT
+api.deletePhoto = function(req, res) {
+  var id = req.body.id;
+
+  Photo.findById(id, function(err, photo) {
+    if(err || !photo) {
+      return res.send(500, err || { msg: 'photo is null' });
+    } else {
+      var fileName = photo.url.substr(photo.url.lastIndexOf('/') + 1);
+
+      editPhotoById(id, {
+        'status.deleted': true
+      }, function(err) {
+        if(err) {
+          return res.json(500, { msg: 'delete failed' });
+        } else {
+          cloud.markPhotoDeleted(fileName);
+          return res.send(204);
+        }
+      });
+    }
+  });
+  
 };
 
 module.exports = api;

@@ -67,7 +67,7 @@
     $form.css('display', 'none');
     $photoResult.css('display', 'block');
     $result.attr('src', data.url);
-    $link.html(window.location.origin + '/photo?id=' + data.id);
+    $link.html(window.location.origin + '/photo/' + data.id);
     $passcode.html(data.passcode);
   };
 

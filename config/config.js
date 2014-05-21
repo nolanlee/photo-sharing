@@ -22,6 +22,7 @@ var config = {
     app: {
       name: 'photo-sharing-app'
     },
+    freezeThreshold: 3,
     port: 3000,
     sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-development',
@@ -33,6 +34,7 @@ var config = {
     app: {
       name: 'photo-sharing-app'
     },
+    freezeThreshold: 3,
     port: 3000,
     sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-test',
@@ -44,6 +46,7 @@ var config = {
     app: {
       name: 'photo-sharing-app'
     },
+    freezeThreshold: 10,
     port: 3000,
     sessionMaxAge: 30 * 60 * 1000,
     db: uristring + '-production',

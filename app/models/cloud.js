@@ -22,4 +22,14 @@ Cloud.getPhotoURL = function(key) {
   return 'http://' + bucketname + '.qiniudn.com/' + key;
 };
 
+Cloud.markPhotoDeleted = function(fileName) {
+  var client = new qiniu.rs.Client();
+
+  client.move(bucketname, fileName, bucketname, fileName + '_D', function(err, ret) {
+    if (err) {
+      console.log(err);
+    } 
+  });
+};
+
 module.exports = Cloud;

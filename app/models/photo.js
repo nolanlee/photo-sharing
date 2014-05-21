@@ -11,10 +11,14 @@ var photoSchema = new Schema({
       longitude: Number
     }
   },
-  passcode: { type: String },
-  freeze: { type: Boolean, default: false },
-  warningDate: Date,
-  deleted: { type: Boolean, default: false }
+  status: {
+    freeze: {
+      count: { type: Number, default: 0 },
+      status: { type: Boolean, default: false }
+    },
+    deleted: { type: Boolean, default: false }
+  },
+  passcode: { type: String }
 });
 
 // TODO: Need other invalidation later

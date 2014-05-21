@@ -2,8 +2,8 @@
 
   var $photo = $('#photo')
     , $description = $('#description')
-    , parameters = location.search.substr(1)
-    , photoId = parameters.substring(parameters.indexOf('id=') + 3);
+    , pathname = location.pathname
+    , photoId = pathname.substring(pathname.lastIndexOf('/') + 1);
 
   var initDeleteDialog = function() {
     var $deleteLink = $('#deleteLink')
@@ -28,7 +28,7 @@
           passcode: $passcode.val()
         }),
         contentType: 'application/json',
-        url: 'api/photo/delete',
+        url: '/api/photo/delete',
         success: function() {
           window.location.href = window.location.origin;
         },
@@ -50,7 +50,7 @@
           id: photoId
         }),
         contentType: 'application/json',
-        url: 'api/photo/complain',
+        url: '/api/photo/complain',
         success: function() {
           alert('complain success');
         },
@@ -133,7 +133,7 @@
     $('.title').on('click', forwardNewView);
     $('#new').on('click', forwardNewView);
 
-    $.get('api/photo/' + photoId, function(data) {
+    $.get('/api/photo/' + photoId, function(data) {
       $photo.attr('src', data.url);
       if(data.details.description && data.details.description.length > 0) {
         $description.html(data.details.description);

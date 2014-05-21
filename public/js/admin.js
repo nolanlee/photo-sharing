@@ -8,8 +8,8 @@
     , $password = $('#password')
     , $alert = $('#alert');
 
-  var getPhotos = function(sucess, fail) {
-    $.get('/api/admin/getPhotos', sucess).fail(fail);
+  var getPhotos = function(success, fail) {
+    $.get('/api/admin/getPhotos', success).fail(fail);
   };
 
   var contentUIHandler = function(data) {
@@ -23,11 +23,13 @@
       for(var i = 0, l = photos.length; i < l; i++) {
         htmlStr += '<tr><td><a href="' + photos[i].url + '">' + photos[i]._id + '</a></td>';
 
-        if(!photos[i].freeze) {
-          htmlStr += '<td><button class="btn btn-primary unfreeze">Unfreeze</button></td>';
+        if(!photos[i].status.freeze.status) {
+          htmlStr += '<td><button class="btn btn-primary unfreeze">Unfreeze</button>';
         } else {
-          htmlStr += '<td><button class="btn btn-warning freeze">Freeze</button></td>';
+          htmlStr += '<td><button class="btn btn-warning freeze">Freeze</button>';
         }
+
+        htmlStr += '<button class="btn btn-primary delete">Delete</button></td>';
 
         htmlStr += '</tr>';
       }
@@ -37,7 +39,8 @@
       $content.html(htmlStr);
 
       var $unfreeze = $('.unfreeze')
-        , $freeze = $('.freeze');
+        , $freeze = $('.freeze')
+        , $del = $('.delete');
 
       var unfreezeHandler = function(e) {
         var $target = $(e.target)
@@ -77,14 +80,33 @@
               .addClass('unfreeze btn-primary')
               .removeClass('freeze btn-warning')
               .off('click', freezeHandler)
-              .on('click', unfreezeHandler);;
+              .on('click', unfreezeHandler);
+          }
+        });
+      };
+
+      var deleteHandler = function(e) {
+        var $target = $(e.target)
+          , photoId = $target.parent().prev('td').children('a').html();
+
+        $.ajax({
+          type: 'PUT',
+          url: '/api/admin/deletePhoto',
+          data: JSON.stringify({
+            id: photoId
+          }),
+          contentType: 'application/json',
+          success: function() {
+            getPhotos(contentUIHandler);
           }
         });
       };
 
       $unfreeze.on('click', unfreezeHandler);
       $freeze.on('click', freezeHandler);
-
+      $del.on('click', deleteHandler);
+    } else {
+       $content.html('');
     }
   };
 
