@@ -59,6 +59,11 @@
               .removeClass('unfreeze btn-primary')
               .off('click', unfreezeHandler)
               .on('click', freezeHandler);
+          },
+          error: function(err) {
+            if(err.status === 401) {
+              logoutUIHandler();
+            }
           }
         });
 
@@ -81,6 +86,11 @@
               .removeClass('freeze btn-warning')
               .off('click', freezeHandler)
               .on('click', unfreezeHandler);
+          },
+          error: function(err) {
+            if(err.status === 401) {
+              logoutUIHandler();
+            }
           }
         });
       };
@@ -98,6 +108,11 @@
           contentType: 'application/json',
           success: function() {
             getPhotos(contentUIHandler);
+          },
+          error: function(err) {
+            if(err.status === 401) {
+              logoutUIHandler();
+            }
           }
         });
       };

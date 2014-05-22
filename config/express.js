@@ -3,6 +3,7 @@ var express = require('express')
   , multiparty = require('connect-multiparty')
   , methodOverride = require('method-override')
   , session = require('cookie-session')
+  , cookie = require('cookie-parser')
   , bodyParser = require('body-parser')
   , logger = require('morgan')
   , cloud = require('../app/models/cloud')
@@ -16,6 +17,7 @@ module.exports = function (app, config) {
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'jade');
   app.use(logger('dev'));
+  app.use(cookie());
   app.use(bodyParser());
   app.use(multiparty());
   app.use(methodOverride());

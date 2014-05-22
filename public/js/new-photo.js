@@ -44,6 +44,16 @@
   };
 
   //******************* UI handler *************************
+  var showToast = function(content) {
+    $toast.html(content || '');
+
+    $toast.css('display', 'block');
+        
+    setTimeout(function() {
+      $toast.fadeOut('slow');
+    }, 1500);
+  };
+
   var showLoading = function(swiitch) {
     if(swiitch) {
       $loadingContainer.css('display', 'block');
@@ -77,7 +87,7 @@
       event.preventDefault();
 
       if(typeof FormData === 'undefined') {
-          alert('Please update your browser');
+          showToast('Please update your browser');
           return;
       }
 
@@ -142,12 +152,7 @@
         , reader = new FileReader(); 
 
       if(file.size > FILE_SIZE_LIMIT) {
-        $toast.css('display', 'block');
-        
-        setTimeout(function() {
-          $toast.fadeOut('slow');
-        }, 1000)
-
+        showToast('Image size must be less than 8MB');
       } else {
         // get photo GPS information
         EXIF.getData(file, function() {

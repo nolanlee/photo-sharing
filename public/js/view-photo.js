@@ -5,6 +5,17 @@
     , pathname = location.pathname
     , photoId = pathname.substring(pathname.lastIndexOf('/') + 1);
 
+  var showToast = function(content) {
+    var $toast = $('#toast');
+
+    $toast.html(content || '');
+    $toast.css('display', 'block');
+        
+    setTimeout(function() {
+      $toast.fadeOut('slow');
+    }, 1500);
+  };
+
   var initDeleteDialog = function() {
     var $deleteLink = $('#deleteLink')
       , $deleteBtn = $('#deleteBtn')
@@ -32,8 +43,8 @@
         success: function() {
           window.location.href = window.location.origin;
         },
-        error: function() {
-          alert('delete failed');
+        error: function(err) {
+          showToast(JSON.parse(err.responseText).msg);
         }
       });
     });
@@ -52,10 +63,14 @@
         contentType: 'application/json',
         url: '/api/photo/complain',
         success: function() {
-          alert('complain success');
+          showToast('complain success');
         },
-        error: function() {
-          alert('complain failed');
+        error: function(err) {
+          if(err.status === 403) {
+            showToast('You have complained it.');
+          } else {
+            showToast('complain failed');
+          }
         }
       });
     });

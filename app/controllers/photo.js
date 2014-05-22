@@ -136,33 +136,38 @@ api.unfreezePhoto = function(req, res) {
 api.complainPhoto = function(req, res) {
   var id = req.body.id;
 
-  Photo.findById(id, function(err, photo) {
-    if(err) {
-      res.send(500, err);
-    } else if (!photo || photo.status.deleted || photo.status.freeze.status) {
-       res.send(500, 'Photo is null');
-    } else {
-      var updateData;
-
-      if(photo.status.freeze.count < config.freezeThreshold) {
-        updateData = {
-          'status.freeze.count': photo.status.freeze.count + 1
-        };
+  if(req.cookies['complained-' + id]) {
+    res.json(403, { complained: true });
+  } else {
+    Photo.findById(id, function(err, photo) {
+      if(err) {
+        res.send(500, err);
+      } else if (!photo || photo.status.deleted || photo.status.freeze.status) {
+         res.send(500, 'Photo is null');
       } else {
-        updateData = {
-          'status.freeze.status': true
-        };
-      }
+        var updateData;
 
-      editPhotoById(id, updateData, function(err) {
-        if(err) {
-          return res.json(500, { msg: 'complain failed' });
+        if(photo.status.freeze.count < config.freezeThreshold) {
+          updateData = {
+            'status.freeze.count': photo.status.freeze.count + 1
+          };
         } else {
-          return res.send(204);
+          updateData = {
+            'status.freeze.status': true
+          };
         }
-      });
-    }
-  });
+
+        editPhotoById(id, updateData, function(err) {
+          if(err) {
+            return res.json(500, { msg: 'complain failed' });
+          } else {
+            res.cookie('complained-' + id, true, { maxAge: 86400000, httpOnly: true });
+            return res.send(204);
+          }
+        });
+      }
+    });
+  }
   
 };
 
@@ -182,7 +187,7 @@ api.deletePhotoWithVerify = function(req, res) {
       }
     });
   } else {
-    return res.json(500, { msg: 'passcode is null' });
+    return res.json(403, { msg: 'passcode is null' });
   }
 };
 
