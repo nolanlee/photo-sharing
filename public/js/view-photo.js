@@ -90,7 +90,7 @@
 
         if($mapCanvas.height() === 0) {
           var marker = new google.maps.Marker({
-              position:  new google.maps.LatLng(31.209668, 121.595222)
+              position:  new google.maps.LatLng(latitude, longitude)
           });
 
           $mapCanvas.height(300);
