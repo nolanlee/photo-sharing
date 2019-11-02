@@ -17,7 +17,7 @@
     "morgan": "~1.0.0",
     "debug": "~0.7.4",
     "jade": "~1.3.0",
-    "mongoose": "~3.8.8",
+    "mongoose": "~5.7.7",
     "body-parser": "latest",
     "qiniu": "latest",
     "node-uuid": "latest",
